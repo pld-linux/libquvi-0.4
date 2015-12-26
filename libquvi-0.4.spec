@@ -4,34 +4,26 @@
 #
 Summary:	A cross-platform library for parsing flash media stream
 Summary(pl.UTF-8):	Wieloplatformowa biblioteka do analizy flashowych strumieni multimedialnych
-Name:		libquvi
-Version:	0.9.4
+Name:		libquvi-0.4
+Version:	0.4.1
 Release:	1
 License:	AGPL v3+
 Group:		Libraries
-Source0:	http://downloads.sourceforge.net/quvi/%{name}-%{version}.tar.xz
-# Source0-md5:	8e3f2134a6b3376934bd884b07dcdac5
+Source0:	http://downloads.sourceforge.net/quvi/libquvi-%{version}.tar.xz
+# Source0-md5:	acc5a5da25a7f89c6ff5338d00eaaf58
+Patch0:		%{name}-automake-1.12.patch
 URL:		http://quvi.sourceforge.net/
-BuildRequires:	asciidoc
-BuildRequires:	autoconf >= 2.69
+BuildRequires:	autoconf >= 2.68
 BuildRequires:	automake >= 1:1.11.1
-BuildRequires:	curl-devel >= 7.21
-BuildRequires:	doxygen
-BuildRequires:	gettext-tools >= 0.18.1
-BuildRequires:	glib2-devel >= 1:2.24
-BuildRequires:	libgcrypt-devel >= 1.4.5
-BuildRequires:	libproxy-devel >= 0.3.1
-BuildRequires:	libquvi-scripts >= 0.9
-BuildRequires:	libtool >= 2:2.2.6
+BuildRequires:	curl-devel >= 7.18.2
+BuildRequires:	libquvi-scripts-0.4 >= 0.4.0
+BuildRequires:	libtool >= 2:2.2
 BuildRequires:	lua51-devel >= 5.1
 BuildRequires:	pkgconfig
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
-Requires:	curl-libs >= 7.21
-Requires:	glib2 >= 1:2.24
-Requires:	libgcrypt >= 1.4.5
-Requires:	libproxy >= 0.3.1
-Requires:	libquvi-scripts >= 0.9
+Requires:	curl-libs >= 7.18.2
+Requires:	libquvi-scripts-0.4 >= 0.4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -47,8 +39,6 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki libquvi
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	lua51-devel
-Provides:	quvi-devel = %{version}-%{release}
-Obsoletes:	quvi-devel < 0.2.16.2-2
 
 %description devel
 Header files for libquvi library.
@@ -61,8 +51,6 @@ Summary:	Static libquvi library
 Summary(pl.UTF-8):	Statyczna biblioteka libquvi
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
-Provides:	quvi-static = %{version}-%{release}
-Obsoletes:	quvi-static < 0.2.16.2-2
 
 %description static
 Static libquvi library.
@@ -71,7 +59,8 @@ Static libquvi library.
 Statyczna biblioteka libquvi.
 
 %prep
-%setup -q
+%setup -q -n libquvi-%{version}
+%patch0 -p1
 
 %build
 %{__libtoolize}
@@ -80,7 +69,7 @@ Statyczna biblioteka libquvi.
 %{__autoheader}
 %{__automake}
 %configure \
-	%{?with_static_libs:--enable-static} \
+	%{!?with_static_libs:--disable-static} \
 	--disable-silent-rules
 %{__make}
 
@@ -92,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
+# libquiv 0.9 version is packaged in libquvi.spec
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/man3/libquvi.3
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -101,18 +93,17 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README
-%attr(755,root,root) %{_libdir}/libquvi-0.9-%{version}.so
+%attr(755,root,root) %{_libdir}/libquvi.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libquvi.so.7
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libquvi-0.9.so
-%{_includedir}/quvi-0.9
-%{_pkgconfigdir}/libquvi-0.9.pc
-%{_mandir}/man3/libquvi.3*
-%{_mandir}/man7/quvi-object.7*
+%attr(755,root,root) %{_libdir}/libquvi.so
+%{_includedir}/quvi
+%{_pkgconfigdir}/libquvi.pc
 
 %if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libquvi-0.9.a
+%{_libdir}/libquvi.a
 %endif
