@@ -6,8 +6,8 @@ Summary:	A cross-platform library for parsing flash media stream
 Summary(pl.UTF-8):	Wieloplatformowa biblioteka do analizy flashowych strumieni multimedialnych
 Name:		libquvi-0.4
 Version:	0.4.1
-Release:	1
-License:	AGPL v3+
+Release:	2
+License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/quvi/libquvi-%{version}.tar.xz
 # Source0-md5:	acc5a5da25a7f89c6ff5338d00eaaf58
@@ -24,6 +24,7 @@ BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 Requires:	curl-libs >= 7.18.2
 Requires:	libquvi-scripts-0.4 >= 0.4.0
+Obsoletes:	libquvi < 0.9
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -39,6 +40,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki libquvi
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	lua51-devel
+Obsoletes:	libquvi-devel < 0.9
 
 %description devel
 Header files for libquvi library.
@@ -51,6 +53,7 @@ Summary:	Static libquvi library
 Summary(pl.UTF-8):	Statyczna biblioteka libquvi
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
+Obsoletes:	libquvi-static < 0.9
 
 %description static
 Static libquvi library.
